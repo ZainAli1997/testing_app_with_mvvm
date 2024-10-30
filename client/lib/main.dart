@@ -5,7 +5,6 @@ import 'package:testing_app_with_mvvm/core/providers/current_user_notifier.dart'
 import 'package:testing_app_with_mvvm/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:testing_app_with_mvvm/features/auth/views/pages/login_page.dart';
 import 'package:testing_app_with_mvvm/features/home/views/pages/home_page.dart';
-// import 'package:testing_app_with_mvvm/features/auth/views/pages/signup_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +28,7 @@ class MyApp extends ConsumerWidget {
     return Portal(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Testing with MVVM',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,

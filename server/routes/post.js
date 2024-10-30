@@ -5,10 +5,11 @@ const postRouter = express.Router();
 
 postRouter.post("/posts/add", auth, async (req, res) => {
     try {
-        const { createdAt, title, description, } = req.body;
+        const { createdAt, title, image, description, } = req.body;
         let post = new Post({
             uid: req.user,
             title,
+            image,
             description,
             createdAt
         });

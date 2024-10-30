@@ -46,7 +46,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                   final post = posts[index];
                   return ref.watch(getUserByIdProvider(post.uid)).when(
                         data: (userData) => ListTile(
-                          leading: const CircleAvatar(),
+                          leading:  CircleAvatar(
+                            backgroundImage: NetworkImage(post.image),
+                          ),
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

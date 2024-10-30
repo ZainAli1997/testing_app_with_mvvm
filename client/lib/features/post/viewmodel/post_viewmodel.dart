@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:testing_app_with_mvvm/core/providers/current_user_notifier.dart';
@@ -26,10 +29,14 @@ class PostViewModel extends _$PostViewModel {
   Future<void> addPost({
     required String title,
     required String description,
+    required File? image,
+    required Uint8List? webImage,
   }) async {
     state = const AsyncValue.loading();
     final res = await _postRepository.addPost(
       title: title,
+      image: image,
+      webImage: webImage,
       description: description,
       token: ref.read(currentUserNotifierProvider)!.token,
     );

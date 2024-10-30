@@ -1,4 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:testing_app_with_mvvm/core/utils/failure.dart';
@@ -16,10 +20,38 @@ PostRepository postRepository(PostRepositoryRef ref) {
 class PostRepository {
   FutureEither<PostModel> addPost({
     required String title,
+    required File? image,
+    required Uint8List? webImage,
     required String description,
     required String token,
   }) async {
     try {
+      final cloudinary = CloudinaryPublic('djs5chzt2', 'znsxkcdy');
+
+      final String imageUrl;
+
+      final String uniqueIdentifier =
+          'web_image_${DateTime.now().millisecondsSinceEpoch}';
+
+      if (kIsWeb) {
+        CloudinaryResponse res = await cloudinary.uploadFile(
+          CloudinaryFile.fromBytesData(
+            webImage!,
+            folder: title,
+            identifier: uniqueIdentifier,
+          ),
+        );
+        imageUrl = res.secureUrl;
+      } else {
+        CloudinaryResponse res = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(
+            image!.path,
+            folder: title,
+          ),
+        );
+        imageUrl = res.secureUrl;
+      }
+
       final response = await http.post(
         Uri.parse(
           '$serverURL/posts/add',
@@ -32,6 +64,7 @@ class PostRepository {
           {
             'createdAt': DateTime.now().millisecondsSinceEpoch,
             'title': title,
+            'image': imageUrl,
             'description': description,
           },
         ),
