@@ -61,83 +61,85 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      CustomTextField(
-                        controller: _nameController,
-                        validator: validateName,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        hintText: "Enter Name",
-                        hintTextStyle: const TextStyle(
-                          fontSize: 30,
-                        ),
-                        cursorTextStyle: const TextStyle(
-                          fontSize: 30,
-                        ),
-                      ),
-                      20.kH,
-                      CustomTextField(
-                        controller: _emailController,
-                        validator: validateEmail,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        hintText: "Enter Email",
-                        hintTextStyle: const TextStyle(
-                          fontSize: 30,
-                        ),
-                        cursorTextStyle: const TextStyle(
-                          fontSize: 30,
-                        ),
-                      ),
-                      20.kH,
-                      CustomTextField(
-                        controller: _passwordController,
-                        validator: validatePassword,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        hintText: "Enter Password",
-                        hintTextStyle: const TextStyle(
-                          fontSize: 30,
-                        ),
-                        cursorTextStyle: const TextStyle(
-                          fontSize: 30,
-                        ),
-                      ),
-                      40.kH,
-                      CustomButton(
-                        height: 60,
-                        buttoncolor: themewhitecolor,
-                        borderRadius: BorderRadius.circular(30),
-                        child: const Text(
-                          "Sign Up",
-                          style: TextStyle(
-                            color: themeblackcolor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+          : SafeArea(
+            child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        CustomTextField(
+                          controller: _nameController,
+                          validator: validateName,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          hintText: "Enter Name",
+                          hintTextStyle: const TextStyle(
+                            fontSize: 30,
+                          ),
+                          cursorTextStyle: const TextStyle(
+                            fontSize: 30,
                           ),
                         ),
-                        onTap: () async {
-                          if (_formKey.currentState!.validate()) {
-                            await ref
-                                .read(authViewModelProvider.notifier)
-                                .signUpUser(
-                                  name: _nameController.text,
-                                  email: _emailController.text,
-                                  password: _passwordController.text,
-                                );
-                          } else {
-                            showSnackBar(context, 'Missing fields!');
-                          }
-                        },
-                      ),
-                    ],
+                        20.kH,
+                        CustomTextField(
+                          controller: _emailController,
+                          validator: validateEmail,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          hintText: "Enter Email",
+                          hintTextStyle: const TextStyle(
+                            fontSize: 30,
+                          ),
+                          cursorTextStyle: const TextStyle(
+                            fontSize: 30,
+                          ),
+                        ),
+                        20.kH,
+                        CustomTextField(
+                          controller: _passwordController,
+                          validator: validatePassword,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          hintText: "Enter Password",
+                          hintTextStyle: const TextStyle(
+                            fontSize: 30,
+                          ),
+                          cursorTextStyle: const TextStyle(
+                            fontSize: 30,
+                          ),
+                        ),
+                        40.kH,
+                        CustomButton(
+                          height: 60,
+                          buttoncolor: themewhitecolor,
+                          borderRadius: BorderRadius.circular(30),
+                          child: const Text(
+                            "Sign Up",
+                            style: TextStyle(
+                              color: themeblackcolor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onTap: () async {
+                            if (_formKey.currentState!.validate()) {
+                              await ref
+                                  .read(authViewModelProvider.notifier)
+                                  .signUpUser(
+                                    name: _nameController.text,
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                  );
+                            } else {
+                              showSnackBar(context, 'Missing fields!');
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+          ),
     );
   }
 }

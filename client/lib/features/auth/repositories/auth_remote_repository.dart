@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:testing_app_with_mvvm/core/models/user_model.dart';
@@ -33,6 +36,7 @@ class AuthRemoteRepository {
             'name': name,
             'email': email,
             'password': password,
+            'profileImage': '',
           },
         ),
       );
@@ -134,10 +138,66 @@ class AuthRemoteRepository {
       if (response.statusCode != 200) {
         return Left(Failure(resBodyMap['detail']));
       }
-
       return Right(
         UserModel.fromMap(resBodyMap),
       );
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  FutureEither<UserModel> editProfile(
+    String id,
+    String newName,
+    File? profileImage,
+    Uint8List? webProfileImage,
+    String token,
+  ) async {
+    try {
+      final cloudinary = CloudinaryPublic('djs5chzt2', 'znsxkcdy');
+
+      final String imageUrl;
+
+      final String uniqueIdentifier =
+          'web_image_${DateTime.now().millisecondsSinceEpoch}';
+
+      if (kIsWeb) {
+        CloudinaryResponse res = await cloudinary.uploadFile(
+          CloudinaryFile.fromBytesData(
+            webProfileImage!,
+            folder: newName,
+            identifier: uniqueIdentifier,
+          ),
+        );
+        imageUrl = res.secureUrl;
+      } else {
+        CloudinaryResponse res = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(
+            profileImage!.path,
+            folder: newName,
+          ),
+        );
+        imageUrl = res.secureUrl;
+      }
+      final response = await http.put(
+        Uri.parse('$serverURL/updateUser/$id'),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token, // Include the token in headers
+        },
+        body: jsonEncode({
+          'name': newName,
+          'profileImage': imageUrl,
+        }),
+      );
+
+      final resBodyMap = jsonDecode(response.body);
+
+      if (response.statusCode != 200) {
+        return Left(Failure(resBodyMap['message'] ?? 'Error updating user'));
+      }
+
+      return Right(UserModel.fromMap(resBodyMap));
     } catch (e) {
       return Left(Failure(e.toString()));
     }

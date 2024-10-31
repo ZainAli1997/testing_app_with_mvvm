@@ -22,6 +22,7 @@ authRouter.post("/api/signup", async (req, res) => {
       email,
       password: hashedPassword,
       name,
+      profileImage: "",
     });
     user = await user.save();
     res.json(user);
@@ -77,15 +78,50 @@ authRouter.get("/user/:id", auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
     res.json(user);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
-  // const user = await User.findById(req.params.id);
-  // res.json(user);
+});
+
+authRouter.put("/updateUser/:id", auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, profileImage } = req.body; // Get the new name and image from the request body
+
+    // Find the user by ID
+    let user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update the user's name if provided
+    if (name) {
+      user.name = name; // Update to the new name
+    }
+
+    // Update the user's image if provided
+    if (profileImage) {
+      user.profileImage = profileImage; // Update to the new image URL
+    }
+
+    // Save the updated user document
+    await user.save();
+
+    // Return the updated user object (excluding password)
+    res.json({
+      id: user._id,
+      name: user.name,
+      profileImage: user.profileImage,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 module.exports = authRouter;

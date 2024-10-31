@@ -20,7 +20,7 @@ final fetchPostsProvider = AutoDisposeFutureProvider<List<PostModel>>.internal(
 );
 
 typedef FetchPostsRef = AutoDisposeFutureProviderRef<List<PostModel>>;
-String _$postViewModelHash() => r'b7b9c0c8a8befafd2026df039b1c14c009581d1e';
+String _$postViewModelHash() => r'ccde064affef14d1cb294d5a5b1ceab810195d76';
 
 /// See also [PostViewModel].
 @ProviderFor(PostViewModel)

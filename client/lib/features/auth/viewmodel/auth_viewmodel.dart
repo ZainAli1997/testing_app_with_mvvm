@@ -1,9 +1,13 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:testing_app_with_mvvm/core/models/user_model.dart';
 import 'package:testing_app_with_mvvm/core/providers/current_user_notifier.dart';
-import 'package:testing_app_with_mvvm/features/auth/auth_repositories/auth_local_repository.dart';
-import 'package:testing_app_with_mvvm/features/auth/auth_repositories/auth_remote_repository.dart';
+import 'package:testing_app_with_mvvm/features/auth/repositories/auth_local_repository.dart';
+import 'package:testing_app_with_mvvm/features/auth/repositories/auth_remote_repository.dart';
+
 part 'auth_viewmodel.g.dart';
 
 @riverpod
@@ -106,6 +110,34 @@ class AuthViewModel extends _$AuthViewModel {
   AsyncValue<UserModel> _getDataSuccess(UserModel user) {
     _currentUserNotifier.addUser(user);
     return state = AsyncValue.data(user);
+  }
+
+  Future<void> editProfile(
+    String newName,
+    File? profileImage,
+    Uint8List? webProfileImage,
+  ) async {
+    state = const AsyncValue.loading();
+
+    final user = ref.read(currentUserNotifierProvider)!;
+
+    final res = await _authRemoteRepository.editProfile(
+      user.id,
+      newName,
+      profileImage,
+      webProfileImage,
+      user.token,
+    );
+
+    final val = switch (res) {
+      Left(value: final l) => state = AsyncValue.error(
+          l.message,
+          StackTrace.current,
+        ),
+      Right(value: final r) => state = AsyncValue.data(r),
+    };
+
+    val;
   }
 
   // Future<void> getUserById({

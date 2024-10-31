@@ -6,7 +6,7 @@ part of 'auth_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getUserByIdHash() => r'37b97047f66aa9e362c8eb8923d451925f536e5f';
+String _$getUserByIdHash() => r'4f68416ee503e3298df623a7efc20b24b6c3b72b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -155,7 +155,7 @@ class _GetUserByIdProviderElement
   String get uid => (origin as GetUserByIdProvider).uid;
 }
 
-String _$authViewModelHash() => r'f791c6de77e89708ee5f21eaf21de7d22520382a';
+String _$authViewModelHash() => r'960c135a9071c19e4bbc60f8d0e5ed3ffc936ef5';
 
 /// See also [AuthViewModel].
 @ProviderFor(AuthViewModel)

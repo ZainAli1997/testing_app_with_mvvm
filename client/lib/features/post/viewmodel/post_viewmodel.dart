@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:testing_app_with_mvvm/core/providers/current_user_notifier.dart';
 import 'package:testing_app_with_mvvm/features/post/models/post_model.dart';
-import 'package:testing_app_with_mvvm/features/post/post_repositories/post_repository.dart';
+import 'package:testing_app_with_mvvm/features/post/repositories/post_repository.dart';
+
 part 'post_viewmodel.g.dart';
 
 @riverpod

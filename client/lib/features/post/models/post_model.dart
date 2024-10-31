@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class PostModel {
@@ -59,7 +58,8 @@ class PostModel {
 
   String toJson() => json.encode(toMap());
 
-  factory PostModel.fromJson(String source) => PostModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory PostModel.fromJson(String source) =>
+      PostModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -69,23 +69,22 @@ class PostModel {
   @override
   bool operator ==(covariant PostModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.createdAt == createdAt &&
-      other.uid == uid &&
-      other.id == id &&
-      other.title == title &&
-      other.image == image &&
-      other.description == description;
+
+    return other.createdAt == createdAt &&
+        other.uid == uid &&
+        other.id == id &&
+        other.title == title &&
+        other.image == image &&
+        other.description == description;
   }
 
   @override
   int get hashCode {
     return createdAt.hashCode ^
-      uid.hashCode ^
-      id.hashCode ^
-      title.hashCode ^
-      image.hashCode ^
-      description.hashCode;
+        uid.hashCode ^
+        id.hashCode ^
+        title.hashCode ^
+        image.hashCode ^
+        description.hashCode;
   }
 }

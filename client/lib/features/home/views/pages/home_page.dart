@@ -5,6 +5,7 @@ import 'package:testing_app_with_mvvm/core/route_structure/go_navigator.dart';
 import 'package:testing_app_with_mvvm/core/theme/font_structures.dart';
 import 'package:testing_app_with_mvvm/core/theme/spacing.dart';
 import 'package:testing_app_with_mvvm/features/auth/viewmodel/auth_viewmodel.dart';
+import 'package:testing_app_with_mvvm/features/auth/views/pages/edit_profile_page.dart';
 import 'package:testing_app_with_mvvm/features/post/viewmodel/post_viewmodel.dart';
 import 'package:testing_app_with_mvvm/features/post/views/pages/add_post_page.dart';
 
@@ -36,6 +37,18 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           ),
           15.kW,
+          GestureDetector(
+            onTap: () {
+              Go.route(
+                context,
+                const EditProfilePage(),
+              );
+            },
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(user.profileImage),
+              // child: Icon(Icons.person),
+            ),
+          ),
         ],
       ),
       body: ref.watch(fetchPostsProvider).when(
@@ -46,8 +59,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                   final post = posts[index];
                   return ref.watch(getUserByIdProvider(post.uid)).when(
                         data: (userData) => ListTile(
-                          leading:  CircleAvatar(
-                            backgroundImage: NetworkImage(post.image),
+                          titleAlignment: ListTileTitleAlignment.top,
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(userData.profileImage),
                           ),
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,6 +75,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 ),
                               ),
                               Text(post.title),
+                              Image.network(
+                                post.image,
+                                height: 200,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
                             ],
                           ),
                           subtitle: Text(post.description),

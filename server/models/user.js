@@ -17,16 +17,16 @@ const userSchema = mongoose.Schema({
         return value.match(re);
       },
       message: "Please enter a valid email address",
-    }
+    },
   },
   password: {
     required: true,
     type: String,
   },
-  // profilePic: {
-  //   type: String,
-  //   required: true,
-  // },
+  profileImage: {
+    type: String,
+    default: "",
+  },
 });
 
 const User = mongoose.model("User", userSchema);
