@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:testing_app_with_mvvm/core/providers/current_user_notifier.dart';
@@ -9,7 +10,7 @@ import 'package:testing_app_with_mvvm/features/post/repositories/post_repository
 part 'post_viewmodel.g.dart';
 
 @riverpod
-Future<List<PostModel>> fetchPosts(FetchPostsRef ref) async {
+Future<List<PostModel>> fetchPosts(Ref ref) async {
   final res = await ref.watch(postRepositoryProvider).fetchPosts();
   return switch (res) {
     Left(value: final l) => throw l.message,

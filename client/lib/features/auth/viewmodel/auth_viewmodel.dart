@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:testing_app_with_mvvm/core/models/user_model.dart';
@@ -11,7 +11,7 @@ import 'package:testing_app_with_mvvm/features/auth/repositories/auth_remote_rep
 part 'auth_viewmodel.g.dart';
 
 @riverpod
-Future<UserModel> getUserById(GetUserByIdRef ref, String uid) async {
+Future<UserModel> getUserById(Ref ref, String uid) async {
   final token =
       ref.watch(currentUserNotifierProvider.select((user) => user!.token));
   final res =
@@ -20,6 +20,11 @@ Future<UserModel> getUserById(GetUserByIdRef ref, String uid) async {
     Left(value: final l) => throw l.message,
     Right(value: final r) => r,
   };
+}
+
+enum AuthStatus {
+  loggedIn,
+  loggedOut,
 }
 
 @riverpod
@@ -140,18 +145,7 @@ class AuthViewModel extends _$AuthViewModel {
     val;
   }
 
-  // Future<void> getUserById({
-  //   required String uid,
-  // }) async {
-  //   state = const AsyncValue.loading();
-  //   final res = await _authRemoteRepository.getUserById(uid);
-  //   final val = switch (res) {
-  //     Left(value: final l) => state = AsyncValue.error(
-  //         l.message,
-  //         StackTrace.current,
-  //       ),
-  //     Right(value: final r) => state = AsyncValue.data(r),
-  //   };
-  //   val;
-  // }
+  Future<void> logout() async {
+    await _authLocalRepository.removeToken();
+  }
 }

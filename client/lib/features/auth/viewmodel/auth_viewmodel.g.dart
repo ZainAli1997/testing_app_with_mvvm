@@ -6,7 +6,7 @@ part of 'auth_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getUserByIdHash() => r'4f68416ee503e3298df623a7efc20b24b6c3b72b';
+String _$getUserByIdHash() => r'629b1d18915546b87307fe789b3f0c60a5928fd7';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -142,6 +142,8 @@ class GetUserByIdProvider extends AutoDisposeFutureProvider<UserModel> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin GetUserByIdRef on AutoDisposeFutureProviderRef<UserModel> {
   /// The parameter `uid` of this provider.
   String get uid;
@@ -155,7 +157,7 @@ class _GetUserByIdProviderElement
   String get uid => (origin as GetUserByIdProvider).uid;
 }
 
-String _$authViewModelHash() => r'960c135a9071c19e4bbc60f8d0e5ed3ffc936ef5';
+String _$authViewModelHash() => r'f240137bd7ccc8ab49113c47a3921dab923eaad0';
 
 /// See also [AuthViewModel].
 @ProviderFor(AuthViewModel)
@@ -172,4 +174,4 @@ final authViewModelProvider =
 
 typedef _$AuthViewModel = AutoDisposeNotifier<AsyncValue<UserModel>?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

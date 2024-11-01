@@ -56,7 +56,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               child: CircularProgressIndicator(),
             )
           : SafeArea(
-            child: Form(
+              child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
                   child: Padding(
@@ -119,7 +119,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                 ),
               ),
-          ),
+            ),
     );
   }
 }

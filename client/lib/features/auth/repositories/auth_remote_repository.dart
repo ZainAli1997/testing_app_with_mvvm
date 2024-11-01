@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:testing_app_with_mvvm/core/models/user_model.dart';
@@ -13,7 +14,7 @@ import 'package:http/http.dart' as http;
 part 'auth_remote_repository.g.dart';
 
 @riverpod
-AuthRemoteRepository authRemoteRepository(AuthRemoteRepositoryRef ref) {
+AuthRemoteRepository authRemoteRepository(Ref ref) {
   return AuthRemoteRepository();
 }
 

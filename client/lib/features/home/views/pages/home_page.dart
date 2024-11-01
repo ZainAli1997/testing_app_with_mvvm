@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:testing_app_with_mvvm/core/providers/current_user_notifier.dart';
 import 'package:testing_app_with_mvvm/core/route_structure/go_navigator.dart';
+import 'package:testing_app_with_mvvm/core/theme/colors.dart';
 import 'package:testing_app_with_mvvm/core/theme/font_structures.dart';
 import 'package:testing_app_with_mvvm/core/theme/spacing.dart';
+import 'package:testing_app_with_mvvm/core/widgets/custom_cached_network_image.dart';
+import 'package:testing_app_with_mvvm/core/widgets/snackbar.dart';
 import 'package:testing_app_with_mvvm/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:testing_app_with_mvvm/features/auth/views/pages/edit_profile_page.dart';
+import 'package:testing_app_with_mvvm/features/auth/views/pages/login_page.dart';
 import 'package:testing_app_with_mvvm/features/post/viewmodel/post_viewmodel.dart';
 import 'package:testing_app_with_mvvm/features/post/views/pages/add_post_page.dart';
 
@@ -20,6 +24,25 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUserNotifierProvider)!;
+    ref.listen(
+      authViewModelProvider,
+      (_, next) {
+        next?.when(
+          data: (data) {
+            if (data.token.isEmpty) {
+              Go.route(
+                context,
+                const LoginPage(),
+              );
+            }
+          },
+          error: (error, stackTrace) {
+            showSnackBar(context, error.toString());
+          },
+          loading: () {},
+        );
+      },
+    );
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -44,9 +67,30 @@ class _HomePageState extends ConsumerState<HomePage> {
                 const EditProfilePage(),
               );
             },
+            child: CustomCachedNetworkImage(
+              imageUrl: user.profileImage,
+              imageBuilder: (context, imageProvider) {
+                return CircleAvatar(
+                  backgroundImage: imageProvider,
+                  // child: Icon(Icons.person),
+                );
+              },
+              animChild: CircleAvatar(
+                backgroundColor: themegreycolor,
+              ),
+            ),
+          ),
+          15.kW,
+          GestureDetector(
+            onTap: () {
+              ref.read(authViewModelProvider.notifier).logout();
+              Go.route(
+                context,
+                const LoginPage(),
+              );
+            },
             child: CircleAvatar(
-              backgroundImage: NetworkImage(user.profileImage),
-              // child: Icon(Icons.person),
+              child: Icon(Icons.logout),
             ),
           ),
         ],
@@ -60,9 +104,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                   return ref.watch(getUserByIdProvider(post.uid)).when(
                         data: (userData) => ListTile(
                           titleAlignment: ListTileTitleAlignment.top,
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(userData.profileImage),
+                          leading: CustomCachedNetworkImage(
+                            imageUrl: userData.profileImage,
+                            imageBuilder: (context, imageProvider) {
+                              return CircleAvatar(
+                                backgroundImage: imageProvider,
+                                // child: Icon(Icons.person),
+                              );
+                            },
+                            animChild: CircleAvatar(
+                              backgroundColor: themegreycolor,
+                            ),
                           ),
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,11 +127,21 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 ),
                               ),
                               Text(post.title),
-                              Image.network(
-                                post.image,
-                                height: 200,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
+                              CustomCachedNetworkImage(
+                                imageUrl: post.image,
+                                imageBuilder: (context, imageProvider) {
+                                  return Image(
+                                    image: imageProvider,
+                                    height: 200,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                                animChild: Container(
+                                  height: 200,
+                                  width: double.infinity,
+                                  color: themegreycolor,
+                                ),
                               ),
                             ],
                           ),
