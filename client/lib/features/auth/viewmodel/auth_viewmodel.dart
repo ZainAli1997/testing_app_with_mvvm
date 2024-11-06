@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:testing_app_with_mvvm/core/models/user_model.dart';
@@ -10,17 +9,19 @@ import 'package:testing_app_with_mvvm/features/auth/repositories/auth_remote_rep
 
 part 'auth_viewmodel.g.dart';
 
-@riverpod
-Future<UserModel> getUserById(Ref ref, String uid) async {
-  final token =
-      ref.watch(currentUserNotifierProvider.select((user) => user!.token));
-  final res =
-      await ref.watch(authRemoteRepositoryProvider).getUserById(uid, token);
-  return switch (res) {
-    Left(value: final l) => throw l.message,
-    Right(value: final r) => r,
-  };
-}
+final getUserByIdProvider = AutoDisposeFutureProvider.family<UserModel, String>(
+  (ref, uid) async {
+    final token =
+        ref.watch(currentUserNotifierProvider.select((user) => user!.token));
+    final res =
+        await ref.watch(authRemoteRepositoryProvider).getUserById(uid, token);
+
+    return switch (res) {
+      Left(value: final l) => throw l.message,
+      Right(value: final r) => r,
+    };
+  },
+);
 
 enum AuthStatus {
   loggedIn,

@@ -90,29 +90,24 @@ authRouter.get("/user/:id", auth, async (req, res) => {
 authRouter.put("/updateUser/:id", auth, async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, profileImage } = req.body; // Get the new name and image from the request body
+    const { name, profileImage } = req.body;
 
-    // Find the user by ID
     let user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update the user's name if provided
     if (name) {
-      user.name = name; // Update to the new name
+      user.name = name;
     }
 
-    // Update the user's image if provided
     if (profileImage) {
-      user.profileImage = profileImage; // Update to the new image URL
+      user.profileImage = profileImage;
     }
 
-    // Save the updated user document
     await user.save();
 
-    // Return the updated user object (excluding password)
     res.json({
       id: user._id,
       name: user.name,

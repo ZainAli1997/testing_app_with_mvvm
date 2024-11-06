@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:testing_app_with_mvvm/core/helpers/helpers.dart';
 import 'package:testing_app_with_mvvm/core/providers/current_user_notifier.dart';
 import 'package:testing_app_with_mvvm/core/route_structure/go_navigator.dart';
 import 'package:testing_app_with_mvvm/core/theme/colors.dart';
@@ -67,17 +68,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                 const EditProfilePage(),
               );
             },
-            child: CustomCachedNetworkImage(
-              imageUrl: user.profileImage,
-              imageBuilder: (context, imageProvider) {
-                return CircleAvatar(
-                  backgroundImage: imageProvider,
-                  // child: Icon(Icons.person),
-                );
-              },
-              animChild: CircleAvatar(
-                backgroundColor: themegreycolor,
-              ),
+            child: const CircleAvatar(
+              child: Icon(Icons.edit),
             ),
           ),
           15.kW,
@@ -89,7 +81,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 const LoginPage(),
               );
             },
-            child: CircleAvatar(
+            child: const CircleAvatar(
               child: Icon(Icons.logout),
             ),
           ),
@@ -109,10 +101,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                             imageBuilder: (context, imageProvider) {
                               return CircleAvatar(
                                 backgroundImage: imageProvider,
-                                // child: Icon(Icons.person),
                               );
                             },
-                            animChild: CircleAvatar(
+                            animChild: const CircleAvatar(
                               backgroundColor: themegreycolor,
                             ),
                           ),
@@ -143,9 +134,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   color: themegreycolor,
                                 ),
                               ),
+                              5.kH,
+                              Text(post.description),
                             ],
                           ),
-                          subtitle: Text(post.description),
+                          subtitle: Text(
+                            Helpers.timeAgo(
+                              post.createdAt.millisecondsSinceEpoch,
+                            ),
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
                         error: (error, st) {
                           return Center(

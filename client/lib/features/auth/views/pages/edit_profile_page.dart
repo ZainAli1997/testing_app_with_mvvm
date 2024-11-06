@@ -22,10 +22,13 @@ class EditProfilePage extends ConsumerStatefulWidget {
 
 class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   final _nameController = TextEditingController();
-  // final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   File? profileImage;
   Uint8List? webProfileImage;
+
+  late String originalName;
+  late String originalProfileImage;
 
   void selectImage() async {
     var res = await pickImage();
@@ -46,6 +49,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   void initState() {
     final user = ref.read(currentUserNotifierProvider)!;
     _nameController.text = user.name;
+    originalName = user.name;
+    originalProfileImage = user.profileImage;
     super.initState();
   }
 
@@ -53,6 +58,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   void dispose() {
     _nameController.dispose();
     super.dispose();
+  }
+
+  bool _hasChanges() {
+    return _nameController.text != originalName ||
+        (profileImage != null || webProfileImage != null);
   }
 
   @override
@@ -83,94 +93,91 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      user.profileImage != ''
-                          ? GestureDetector(
-                              onTap: selectImage,
-                              child: Container(
-                                height: 80,
-                                width: 80,
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: NetworkImage(user.profileImage),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            )
-                          : GestureDetector(
-                              onTap: selectImage,
-                              child: Container(
-                                height: 80,
-                                width: 80,
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  shape: BoxShape.circle,
-                                  image: profileImage != null
+          : Form(
+              key: _formKey,
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: selectImage,
+                          child: Container(
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              border: Border.all(),
+                              shape: BoxShape.circle,
+                              image: profileImage != null
+                                  ? DecorationImage(
+                                      image: FileImage(profileImage!),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : webProfileImage != null
                                       ? DecorationImage(
-                                          image: FileImage(profileImage!),
+                                          image: MemoryImage(
+                                            webProfileImage!,
+                                          ),
                                           fit: BoxFit.cover,
                                         )
-                                      : webProfileImage != null
+                                      : user.profileImage != ''
                                           ? DecorationImage(
-                                              image:
-                                                  MemoryImage(webProfileImage!),
+                                              image: NetworkImage(
+                                                user.profileImage,
+                                              ),
                                               fit: BoxFit.cover,
                                             )
                                           : null,
-                                ),
-                                child: profileImage != null ||
-                                        webProfileImage != null
-                                    ? null
-                                    : Icon(
-                                        Icons.add,
-                                        size: 40,
-                                      ),
-                              ),
                             ),
-                      CustomTextField(
-                        controller: _nameController,
-                        validator: validateName,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        hintText: "Enter Name",
-                        hintTextStyle: const TextStyle(
-                          fontSize: 30,
-                        ),
-                        cursorTextStyle: const TextStyle(
-                          fontSize: 30,
-                        ),
-                      ),
-                      40.kH,
-                      CustomButton(
-                        height: 60,
-                        buttoncolor: themewhitecolor,
-                        borderRadius: BorderRadius.circular(30),
-                        child: const Text(
-                          "Save",
-                          style: TextStyle(
-                            color: themeblackcolor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                            child: profileImage != null ||
+                                    webProfileImage != null ||
+                                    user.profileImage != ''
+                                ? null
+                                : Icon(
+                                    Icons.add,
+                                    size: 40,
+                                  ),
                           ),
                         ),
-                        onTap: () async {
-                          await ref
-                              .read(authViewModelProvider.notifier)
-                              .editProfile(
-                                _nameController.text,
-                                profileImage,
-                                webProfileImage,
-                              );
-                        },
-                      ),
-                    ],
+                        CustomTextField(
+                          controller: _nameController,
+                          validator: validateName,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          hintText: "Enter Name",
+                          hintTextStyle: const TextStyle(
+                            fontSize: 30,
+                          ),
+                          cursorTextStyle: const TextStyle(
+                            fontSize: 30,
+                          ),
+                        ),
+                        40.kH,
+                        if (_hasChanges())
+                          CustomButton(
+                            height: 60,
+                            buttoncolor: themewhitecolor,
+                            borderRadius: BorderRadius.circular(30),
+                            child: const Text(
+                              "Save",
+                              style: TextStyle(
+                                color: themeblackcolor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onTap: () async {
+                              await ref
+                                  .read(authViewModelProvider.notifier)
+                                  .editProfile(
+                                    _nameController.text,
+                                    profileImage,
+                                    webProfileImage,
+                                  );
+                            },
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),

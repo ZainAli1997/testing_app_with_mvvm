@@ -19,9 +19,6 @@ final fetchPostsProvider = AutoDisposeFutureProvider<List<PostModel>>.internal(
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef FetchPostsRef = AutoDisposeFutureProviderRef<List<PostModel>>;
 String _$postViewModelHash() => r'ccde064affef14d1cb294d5a5b1ceab810195d76';
 
 /// See also [PostViewModel].

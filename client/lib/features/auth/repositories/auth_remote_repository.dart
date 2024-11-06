@@ -184,7 +184,7 @@ class AuthRemoteRepository {
         Uri.parse('$serverURL/updateUser/$id'),
         headers: {
           'Content-Type': 'application/json',
-          'x-auth-token': token, // Include the token in headers
+          'x-auth-token': token,
         },
         body: jsonEncode({
           'name': newName,
@@ -195,7 +195,7 @@ class AuthRemoteRepository {
       final resBodyMap = jsonDecode(response.body);
 
       if (response.statusCode != 200) {
-        return Left(Failure(resBodyMap['message'] ?? 'Error updating user'));
+        return Left(Failure(resBodyMap['message']));
       }
 
       return Right(UserModel.fromMap(resBodyMap));
